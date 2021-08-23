@@ -1,3 +1,3 @@
 <p align="center">
-Cinderscapes Reforged is a port of Cinderscapes to forge. You can find the Original project <a href=https://www.curseforge.com/minecraft/mc-mods/cinderscapes>Here</a>.
+Nether End Biomes Injector is a port of Fabric biomes api nether and end stuff to forge. You can find the Original project <a href=https://github.com/FabricMC/fabric/tree/1.17/fabric-biome-api-v1>Here</a>.
 </p>
