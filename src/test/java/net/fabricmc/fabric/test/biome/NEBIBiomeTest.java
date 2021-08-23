@@ -79,7 +79,7 @@ public class NEBIBiomeTest {
 	private static final RegistryKey<Biome> TEST_END_BARRRENS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(MOD_ID, "test_end_barrens"));
 
 	private static BlockState STONE = Blocks.STONE.getDefaultState();
-	private static ConfiguredSurfaceBuilder<TernarySurfaceConfig> TEST_END_SURFACE_BUILDER = registerTestSurfaceBuilder(new Identifier(MOD_ID, "end"), SurfaceBuilder.DEFAULT.withConfig(new TernarySurfaceConfig(STONE, STONE, STONE)));
+	private static ConfiguredSurfaceBuilder<TernarySurfaceConfig> TEST_END_SURFACE_BUILDER = SurfaceBuilder.DEFAULT.withConfig(new TernarySurfaceConfig(STONE, STONE, STONE));
 
 	public NEBIBiomeTest(){
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -119,7 +119,7 @@ public class NEBIBiomeTest {
 		OverworldBiomes.addContinentalBiome(BiomeKeys.END_HIGHLANDS, OverworldClimate.DRY, 0.5);
 
 		e.enqueueWork(() -> {
-			ConfiguredFeature<?, ?> COMMON_DESERT_WELL = Feature.DESERT_WELL.configure(FeatureConfig.DEFAULT).decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP);
+			registerTestSurfaceBuilder(new Identifier(MOD_ID, "end"), TEST_END_SURFACE_BUILDER);
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "common_desert_well"), COMMON_DESERT_WELL);
 
 			BiomeModifications.create(new Identifier("nebi:test_mod"))
@@ -165,7 +165,7 @@ public class NEBIBiomeTest {
 		return (new Biome.Builder()).precipitation(Biome.Precipitation.NONE).category(Biome.Category.THEEND).depth(0.1F).scale(0.2F).temperature(0.5F).downfall(0.5F).effects((new BiomeEffects.Builder()).waterColor(4159204).waterFogColor(329011).fogColor(10518688).skyColor(0).moodSound(BiomeMoodSound.CAVE).build()).spawnSettings(builder2.build()).generationSettings(builder.build()).build();
 	}
 
-	private static <SC extends SurfaceConfig> ConfiguredSurfaceBuilder<SC> registerTestSurfaceBuilder(Identifier id, ConfiguredSurfaceBuilder<SC> configuredSurfaceBuilder) {
-		return BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_SURFACE_BUILDER, id, configuredSurfaceBuilder);
+	private static <SC extends SurfaceConfig> void registerTestSurfaceBuilder(Identifier id, ConfiguredSurfaceBuilder<SC> configuredSurfaceBuilder) {
+		BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_SURFACE_BUILDER, id, configuredSurfaceBuilder);
 	}
 }
