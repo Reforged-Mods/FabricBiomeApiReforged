@@ -29,6 +29,7 @@ repositories {
             includeGroup "me.shedaniel"
         }
     }
+    mavenCentral()
 }
 
 processResources {
