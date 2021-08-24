@@ -2,13 +2,10 @@ plugins {
     id 'dev.architectury.loom' version '0.7.2-SNAPSHOT'
 }
 
+apply plugin: 'maven-publish'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
-
-configurations {
-    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
-}
 
 loom {
     mixinConfigs = ["nebi.mixins.json"]
