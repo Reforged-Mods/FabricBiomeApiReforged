@@ -55,7 +55,8 @@ public final class InternalBiomeData {
 	public static void addNetherBiome(RegistryKey<Biome> biome, Biome.MixedNoisePoint spawnNoisePoint) {
 		Preconditions.checkArgument(biome != null, "Biome is null");
 		Preconditions.checkArgument(spawnNoisePoint != null, "Biome.MixedNoisePoint is null");
-		InternalBiomeUtils.ensureIdMapping(biome);
+		//todo figure this out
+		//InternalBiomeUtils.ensureIdMapping(biome);
 		NETHER_BIOME_NOISE_POINTS.put(biome, spawnNoisePoint);
 		NETHER_BIOMES.clear(); // Reset cached overall biome list
 	}
