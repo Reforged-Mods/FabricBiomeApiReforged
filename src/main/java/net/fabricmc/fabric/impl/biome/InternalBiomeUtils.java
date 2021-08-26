@@ -22,6 +22,7 @@ import java.util.function.IntConsumer;
 
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -111,7 +112,7 @@ public final class InternalBiomeUtils {
 	}
 
 	public static int getRawId(RegistryKey<Biome> key) {
-		return BuiltinRegistries.BIOME.getRawId(BuiltinRegistries.BIOME.getOrThrow(key));
+		return BuiltinRegistries.BIOME.getRawId(getOrThrow(key));
 	}
 
 	/**
@@ -127,5 +128,12 @@ public final class InternalBiomeUtils {
 			LOGGER.debug("Automatically creating layer-related raw-id mapping for biome {}", biomeKey);
 			biomes.put(rawId, biomeKey);
 		}
+	}
+
+	private static Biome getOrThrow(RegistryKey<Biome> key){
+		if (ForgeRegistries.BIOMES.containsKey(key.getValue())){
+			return ForgeRegistries.BIOMES.getValue(key.getValue());
+		}
+		throw new IllegalStateException("Missing: " + key + "from forge Registry, did you register the biome?");
 	}
 }

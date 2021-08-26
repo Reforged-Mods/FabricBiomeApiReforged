@@ -56,7 +56,7 @@ public final class InternalBiomeData {
 		Preconditions.checkArgument(biome != null, "Biome is null");
 		Preconditions.checkArgument(spawnNoisePoint != null, "Biome.MixedNoisePoint is null");
 		//todo figure this out
-		//InternalBiomeUtils.ensureIdMapping(biome);
+		InternalBiomeUtils.ensureIdMapping(biome);
 		NETHER_BIOME_NOISE_POINTS.put(biome, spawnNoisePoint);
 		NETHER_BIOMES.clear(); // Reset cached overall biome list
 	}
