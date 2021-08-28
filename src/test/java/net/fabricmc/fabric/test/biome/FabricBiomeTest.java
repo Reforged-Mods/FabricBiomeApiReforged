@@ -68,30 +68,33 @@ import net.minecraftforge.registries.IForgeRegistry;
  *
  * <p>If you don't find a biome right away, teleport far away (~10000 blocks) from spawn and try again.
  */
-@Mod(NEBIBiomeTest.MOD_ID)
-public class NEBIBiomeTest {
-	public static final String MOD_ID = "nebi-testmod";
+@Mod(FabricBiomeTest.MOD_ID)
+public class FabricBiomeTest {
+	public static final String MOD_ID = "fabric-testmod";
 
 	private static final RegistryKey<Biome> TEST_CRIMSON_FOREST = RegistryKey.of(Registry.BIOME_KEY, new Identifier(MOD_ID, "test_crimson_forest"));
-	//private static final RegistryKey<Biome> CUSTOM_PLAINS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(MOD_ID, "custom_plains"));
+	private static final RegistryKey<Biome> CUSTOM_PLAINS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(MOD_ID, "custom_plains"));
 	private static final RegistryKey<Biome> TEST_END_HIGHLANDS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(MOD_ID, "test_end_highlands"));
 	private static final RegistryKey<Biome> TEST_END_MIDLANDS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(MOD_ID, "test_end_midlands"));
 	private static final RegistryKey<Biome> TEST_END_BARRRENS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(MOD_ID, "test_end_barrens"));
 
-	private static BlockState STONE = Blocks.STONE.getDefaultState();
-	private static ConfiguredSurfaceBuilder<TernarySurfaceConfig> TEST_END_SURFACE_BUILDER = SurfaceBuilder.DEFAULT.withConfig(new TernarySurfaceConfig(STONE, STONE, STONE));
+	private static final BlockState STONE = Blocks.STONE.getDefaultState();
+	private static final ConfiguredSurfaceBuilder<TernarySurfaceConfig> TEST_END_SURFACE_BUILDER = SurfaceBuilder.DEFAULT.withConfig(new TernarySurfaceConfig(STONE, STONE, STONE));
 
-	public NEBIBiomeTest(){
+	public FabricBiomeTest(){
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+		FMLJavaModLoadingContext.get().getModEventBus().register(this);
 	}
 
 	@SubscribeEvent
 	public void onRegister(final RegistryEvent.Register<?> event){
 		if (event.getRegistry() == ForgeRegistries.BIOMES){
-			BiomeDictionary.addTypes(TEST_CRIMSON_FOREST, new BiomeDictionary.Type[]{BiomeDictionary.Type.NETHER, BiomeDictionary.Type.HOT, BiomeDictionary.Type.DRY});
-			BiomeDictionary.addTypes(TEST_END_HIGHLANDS, new BiomeDictionary.Type[]{BiomeDictionary.Type.END});
-			BiomeDictionary.addTypes(TEST_END_MIDLANDS, new BiomeDictionary.Type[]{BiomeDictionary.Type.END});
-			BiomeDictionary.addTypes(TEST_END_BARRRENS, new BiomeDictionary.Type[]{BiomeDictionary.Type.END});
+			BiomeDictionary.addTypes(TEST_CRIMSON_FOREST, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.HOT, BiomeDictionary.Type.DRY);
+			BiomeDictionary.addTypes(TEST_END_HIGHLANDS, BiomeDictionary.Type.END);
+			BiomeDictionary.addTypes(TEST_END_MIDLANDS, BiomeDictionary.Type.END);
+			BiomeDictionary.addTypes(TEST_END_BARRRENS, BiomeDictionary.Type.END);
+			BiomeDictionary.addTypes(CUSTOM_PLAINS, BiomeDictionary.Type.PLAINS, BiomeDictionary.Type.OVERWORLD);
+			((IForgeRegistry)event.getRegistry()).register(DefaultBiomeCreator.createPlains(false).setRegistryName(CUSTOM_PLAINS.getRegistryName()));
 			((IForgeRegistry)event.getRegistry()).register(DefaultBiomeCreator.createCrimsonForest().setRegistryName(TEST_CRIMSON_FOREST.getRegistryName()));
 			((IForgeRegistry)event.getRegistry()).register(createEndHighlands().setRegistryName(TEST_END_HIGHLANDS.getRegistryName()));
 			((IForgeRegistry)event.getRegistry()).register(createEndMidlands().setRegistryName(TEST_END_MIDLANDS.getRegistryName()));
@@ -110,6 +113,8 @@ public class NEBIBiomeTest {
 		TheEndBiomes.addMidlandsBiome(TEST_END_HIGHLANDS, TEST_END_MIDLANDS, 1.0);
 		TheEndBiomes.addBarrensBiome(TEST_END_HIGHLANDS, TEST_END_BARRRENS, 1.0);
 
+		OverworldBiomes.addBiomeVariant(BiomeKeys.PLAINS, CUSTOM_PLAINS, 1);
+
 		OverworldBiomes.addEdgeBiome(BiomeKeys.PLAINS, BiomeKeys.END_BARRENS, 0.9);
 
 		OverworldBiomes.addShoreBiome(BiomeKeys.FOREST, BiomeKeys.NETHER_WASTES, 0.9);
@@ -119,10 +124,11 @@ public class NEBIBiomeTest {
 		OverworldBiomes.addContinentalBiome(BiomeKeys.END_HIGHLANDS, OverworldClimate.DRY, 0.5);
 
 		e.enqueueWork(() -> {
+			ConfiguredFeature<?, ?> COMMON_DESERT_WELL = Feature.DESERT_WELL.configure(FeatureConfig.DEFAULT).decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP);
 			registerTestSurfaceBuilder(new Identifier(MOD_ID, "end"), TEST_END_SURFACE_BUILDER);
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(MOD_ID, "common_desert_well"), COMMON_DESERT_WELL);
 
-			BiomeModifications.create(new Identifier("nebi:test_mod"))
+			BiomeModifications.create(new Identifier("fabric:test_mod"))
 					.add(ModificationPhase.ADDITIONS,
 							BiomeSelectors.foundInOverworld(),
 							modification -> modification.getWeather().setDownfall(100))
