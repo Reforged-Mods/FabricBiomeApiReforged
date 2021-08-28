@@ -9,7 +9,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 loom {
-    mixinConfigs = ["nebi.mixins.json"]
+    mixinConfigs = ["fabric-biome-api.mixins.json"]
 }
 
 dependencies {
