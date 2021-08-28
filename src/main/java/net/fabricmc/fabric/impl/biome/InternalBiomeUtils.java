@@ -32,6 +32,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BuiltinBiomes;
 import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
 
+import net.fabricmc.fabric.api.biome.v1.OverworldClimate;
 import net.fabricmc.fabric.mixin.biome.AddHillsLayerAccessor;
 import net.fabricmc.fabric.mixin.biome.BuiltinBiomesAccessor;
 
@@ -109,6 +110,53 @@ public final class InternalBiomeUtils {
 		}
 
 		return low;
+	}
+
+	/**
+	 * Potentially transforms a biome into its variants based on the provided randomness source.
+	 *
+	 * @param random   The randomness source
+	 * @param existing The base biome
+	 * @param climate  The climate in which the biome resides, or null to indicate an unknown climate
+	 * @return The potentially transformed biome
+	 */
+	public static int transformBiome(LayerRandomnessSource random, RegistryKey<Biome> existing, OverworldClimate climate) {
+		Map<RegistryKey<Biome>, VariantTransformer> overworldVariantTransformers = InternalBiomeData.getOverworldVariantTransformers();
+		VariantTransformer transformer = overworldVariantTransformers.get(existing);
+
+		if (transformer != null) {
+			RegistryKey<Biome> key = transformer.transformBiome(existing, random, climate);
+			return getRawId(key);
+		}
+
+		return getRawId(existing);
+	}
+
+	public static void injectBiomesIntoClimate(LayerRandomnessSource random, int[] vanillaArray, OverworldClimate climate, IntConsumer result) {
+		WeightedBiomePicker picker = InternalBiomeData.getOverworldModdedContinentalBiomePickers().get(climate);
+
+		if (picker == null || picker.getCurrentWeightTotal() <= 0.0) {
+			// Return early, there are no modded biomes.
+			// Since we don't pass any values to the IntConsumer, this falls through to vanilla logic.
+			// Thus, this prevents Fabric from changing vanilla biome selection behavior without biome mods in this case.
+
+			return;
+		}
+
+		int vanillaArrayWeight = vanillaArray.length;
+		double reqWeightSum = random.nextInt(Integer.MAX_VALUE) * (vanillaArray.length + picker.getCurrentWeightTotal()) / Integer.MAX_VALUE;
+
+		if (reqWeightSum < vanillaArray.length) {
+			// Vanilla biome; look it up from the vanilla array and transform accordingly.
+
+			result.accept(transformBiome(random, BuiltinBiomes.fromRawId(vanillaArray[(int) reqWeightSum]), climate));
+		} else {
+			// Modded biome; use a binary search, and then transform accordingly.
+
+			WeightedBiomeEntry found = picker.search(reqWeightSum - vanillaArrayWeight);
+
+			result.accept(transformBiome(random, found.getBiome(), climate));
+		}
 	}
 
 	public static int getRawId(RegistryKey<Biome> key) {
