@@ -1,23 +1,23 @@
 modLoader="javafml"
 license="Apache2.0"
 loaderVersion="[31,)"
-issueTrackerURL="https://github.com/Trinsdar/NetherEndBiomeInjector/issues"
+issueTrackerURL="https://github.com/Trinsdar/FabricBiomeApiReforged/issues"
 
 [[mods]]
-modId="nebi-testmod"
+modId="fabric-testmod"
 version="1.0.0"
-displayName="NEBI Test Mod"
-displayURL="https://github.com/Trinsdar/NetherEndBiomeInjector"
+displayName="Fabric Biome Api Test Mod"
+displayURL="https://github.com/Trinsdar/FabricBiomeApiReforged"
 credits="Fabric team for creating fabric and this api, all other contributers who contributed to the original over the years."
 authors="Trinsdar"
-description='''A testmod to test the nebi api'''
-[[dependencies.nebi-testmod]]
+description='''A testmod to test the fabric biome api'''
+[[dependencies.fabric-testmod]]
     modId="forge"
     mandatory=true
     versionRange="[36.1.0,)"
     ordering="AFTER"
     side="BOTH"
-[[dependencies.nebi-testmod]]
+[[dependencies.fabric-testmod]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.16.5,)"
