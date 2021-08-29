@@ -16,6 +16,7 @@
 
 package net.fabricmc.fabric.mixin.biome;
 
+import net.minecraftforge.common.BiomeManager;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -33,6 +34,8 @@ import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
 
 import net.fabricmc.fabric.api.biome.v1.OverworldClimate;
 import net.fabricmc.fabric.impl.biome.InternalBiomeUtils;
+
+import java.util.List;
 
 /**
  * Injects biomes into the arrays of biomes in the {@link SetBaseBiomesLayer}.
@@ -59,7 +62,10 @@ public class MixinSetBaseBiomesLayer {
 	@Mutable
 	private static int[] DRY_BIOMES;
 
-	@Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/biome/layer/SetBaseBiomesLayer;chosenGroup1:[I"), method = "sample", cancellable = true)
+	@Shadow
+	private List<BiomeManager.BiomeEntry>[] biomes;
+
+	/*@Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/biome/layer/SetBaseBiomesLayer;chosenGroup1:[I"), method = "sample", cancellable = true)
 	private void injectDryBiomes(LayerRandomnessSource random, int value, CallbackInfoReturnable<Integer> info) {
 		InternalBiomeUtils.injectBiomesIntoClimate(random, DRY_BIOMES, OverworldClimate.DRY, info::setReturnValue);
 	}
@@ -77,7 +83,7 @@ public class MixinSetBaseBiomesLayer {
 	@Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/biome/layer/SetBaseBiomesLayer;COOL_BIOMES:[I"), method = "sample", cancellable = true)
 	private void injectCoolBiomes(LayerRandomnessSource random, int value, CallbackInfoReturnable<Integer> info) {
 		InternalBiomeUtils.injectBiomesIntoClimate(random, COOL_BIOMES, OverworldClimate.COOL, info::setReturnValue);
-	}
+	}*/
 
 	@Inject(at = @At("RETURN"), method = "sample", cancellable = true)
 	private void transformVariants(LayerRandomnessSource random, int value, CallbackInfoReturnable<Integer> info) {
@@ -98,5 +104,21 @@ public class MixinSetBaseBiomesLayer {
 		}
 
 		info.setReturnValue(InternalBiomeUtils.transformBiome(random, biome, climate));
+	}
+
+	@Inject(at = @At("RETURN"), method = "getBiome", cancellable = true)
+	private void injectGetBiome(BiomeManager.BiomeType type, LayerRandomnessSource random, CallbackInfoReturnable<RegistryKey<Biome>> info){
+		int[] original;
+		List<BiomeManager.BiomeEntry> entries = biomes[type.ordinal()];
+		//todo: figure out what to do with forge's modded biome list
+		if (type == BiomeManager.BiomeType.COOL) {
+			InternalBiomeUtils.injectBiomesIntoClimate(random, COOL_BIOMES, OverworldClimate.COOL, returnValue -> info.setReturnValue(BuiltinBiomes.fromRawId(returnValue)));
+		} else if (type == BiomeManager.BiomeType.WARM){
+			InternalBiomeUtils.injectBiomesIntoClimate(random, TEMPERATE_BIOMES, OverworldClimate.TEMPERATE, returnValue -> info.setReturnValue(BuiltinBiomes.fromRawId(returnValue)));
+		} else if (type == BiomeManager.BiomeType.DESERT){
+			InternalBiomeUtils.injectBiomesIntoClimate(random, DRY_BIOMES, OverworldClimate.DRY, returnValue -> info.setReturnValue(BuiltinBiomes.fromRawId(returnValue)));
+		} else if (type == BiomeManager.BiomeType.ICY){
+			InternalBiomeUtils.injectBiomesIntoClimate(random, SNOWY_BIOMES, OverworldClimate.SNOWY, returnValue -> info.setReturnValue(BuiltinBiomes.fromRawId(returnValue)));
+		}
 	}
 }
