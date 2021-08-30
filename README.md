@@ -39,3 +39,4 @@ dependencies {
 Make sure to replace <tag> with one of these 3: a specific commit, main-SNAPSHOT(if you want the latest changes), or a release version, like v1.0.2.
 Also if it times out, that just means it needs to build the build, just wait a couple minutes and try again.
 
+Note: this will not work with fabric and never will, there is no need for it to do so, since you can just use the fabric api.
