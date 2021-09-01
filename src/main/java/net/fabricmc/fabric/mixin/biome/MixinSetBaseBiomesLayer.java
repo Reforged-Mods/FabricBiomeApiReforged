@@ -44,46 +44,19 @@ import java.util.List;
 public class MixinSetBaseBiomesLayer {
 	@Shadow
 	@Final
-	@Mutable
 	private static int[] SNOWY_BIOMES;
 
 	@Shadow
 	@Final
-	@Mutable
 	private static int[] COOL_BIOMES;
 
 	@Shadow
 	@Final
-	@Mutable
 	private static int[] TEMPERATE_BIOMES;
 
 	@Shadow
 	@Final
-	@Mutable
 	private static int[] DRY_BIOMES;
-
-	@Shadow
-	private List<BiomeManager.BiomeEntry>[] biomes;
-
-	/*@Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/biome/layer/SetBaseBiomesLayer;chosenGroup1:[I"), method = "sample", cancellable = true)
-	private void injectDryBiomes(LayerRandomnessSource random, int value, CallbackInfoReturnable<Integer> info) {
-		InternalBiomeUtils.injectBiomesIntoClimate(random, DRY_BIOMES, OverworldClimate.DRY, info::setReturnValue);
-	}
-
-	@Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/biome/layer/SetBaseBiomesLayer;TEMPERATE_BIOMES:[I"), method = "sample", cancellable = true)
-	private void injectTemperateBiomes(LayerRandomnessSource random, int value, CallbackInfoReturnable<Integer> info) {
-		InternalBiomeUtils.injectBiomesIntoClimate(random, TEMPERATE_BIOMES, OverworldClimate.TEMPERATE, info::setReturnValue);
-	}
-
-	@Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/biome/layer/SetBaseBiomesLayer;SNOWY_BIOMES:[I"), method = "sample", cancellable = true)
-	private void injectSnowyBiomes(LayerRandomnessSource random, int value, CallbackInfoReturnable<Integer> info) {
-		InternalBiomeUtils.injectBiomesIntoClimate(random, SNOWY_BIOMES, OverworldClimate.SNOWY, info::setReturnValue);
-	}
-
-	@Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/world/biome/layer/SetBaseBiomesLayer;COOL_BIOMES:[I"), method = "sample", cancellable = true)
-	private void injectCoolBiomes(LayerRandomnessSource random, int value, CallbackInfoReturnable<Integer> info) {
-		InternalBiomeUtils.injectBiomesIntoClimate(random, COOL_BIOMES, OverworldClimate.COOL, info::setReturnValue);
-	}*/
 
 	@Inject(at = @At("RETURN"), method = "sample", cancellable = true)
 	private void transformVariants(LayerRandomnessSource random, int value, CallbackInfoReturnable<Integer> info) {
@@ -108,17 +81,16 @@ public class MixinSetBaseBiomesLayer {
 
 	@Inject(at = @At("RETURN"), method = "getBiome", cancellable = true)
 	private void injectGetBiome(BiomeManager.BiomeType type, LayerRandomnessSource random, CallbackInfoReturnable<RegistryKey<Biome>> info){
-		int[] original;
-		List<BiomeManager.BiomeEntry> entries = biomes[type.ordinal()];
-		//todo: figure out what to do with forge's modded biome list
-		if (type == BiomeManager.BiomeType.COOL) {
-			InternalBiomeUtils.injectBiomesIntoClimate(random, COOL_BIOMES, OverworldClimate.COOL, returnValue -> info.setReturnValue(BuiltinBiomes.fromRawId(returnValue)));
-		} else if (type == BiomeManager.BiomeType.WARM){
-			InternalBiomeUtils.injectBiomesIntoClimate(random, TEMPERATE_BIOMES, OverworldClimate.TEMPERATE, returnValue -> info.setReturnValue(BuiltinBiomes.fromRawId(returnValue)));
-		} else if (type == BiomeManager.BiomeType.DESERT){
-			InternalBiomeUtils.injectBiomesIntoClimate(random, DRY_BIOMES, OverworldClimate.DRY, returnValue -> info.setReturnValue(BuiltinBiomes.fromRawId(returnValue)));
-		} else if (type == BiomeManager.BiomeType.ICY){
-			InternalBiomeUtils.injectBiomesIntoClimate(random, SNOWY_BIOMES, OverworldClimate.SNOWY, returnValue -> info.setReturnValue(BuiltinBiomes.fromRawId(returnValue)));
+		int[] original = getBiomesArray(type);
+		InternalBiomeUtils.injectBiomesIntoClimate(random, original, OverworldClimate.getFromType(type), returnValue -> info.setReturnValue(BuiltinBiomes.fromRawId(returnValue)));
+	}
+
+	private int[] getBiomesArray(BiomeManager.BiomeType type){
+		switch (type){
+			case COOL: return COOL_BIOMES;
+			case WARM: return TEMPERATE_BIOMES;
+			case ICY: return SNOWY_BIOMES;
+			default: return DRY_BIOMES;
 		}
 	}
 }

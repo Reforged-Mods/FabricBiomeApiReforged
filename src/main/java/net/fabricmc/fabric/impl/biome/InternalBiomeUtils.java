@@ -19,9 +19,12 @@ package net.fabricmc.fabric.impl.biome;
 import java.util.List;
 import java.util.Map;
 import java.util.function.IntConsumer;
+import java.util.stream.Collectors;
 
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.fabricmc.fabric.api.biome.v1.OverworldBiomes;
+import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -183,5 +186,24 @@ public final class InternalBiomeUtils {
 			return ForgeRegistries.BIOMES.getValue(key.getValue());
 		}
 		throw new IllegalStateException("Missing: " + key + "from forge Registry, did you register the biome?");
+	}
+
+	public static void addForgeAddedBiomesToList(){
+		for (BiomeManager.BiomeType type : BiomeManager.BiomeType.values()){
+			WeightedBiomePicker picker = InternalBiomeData.getOverworldModdedContinentalBiomePickers().get(OverworldClimate.getFromType(type));
+			if (picker == null || picker.getCurrentWeightTotal() <= 0.0) {
+				continue;
+			}
+			List<BiomeManager.BiomeEntry> list = BiomeManager.getBiomes(type);
+			if (type != BiomeManager.BiomeType.DESERT_LEGACY){
+				for (BiomeManager.BiomeEntry entry : list){
+					RegistryKey<Biome> biome = entry.getKey();
+					if (biome.getValue() != null && !biome.getValue().getNamespace().equals("minecraft") && picker.entries.stream().noneMatch(w -> w.getBiome() == biome)){
+						//Todo: figure out proper weight
+						OverworldBiomes.addContinentalBiome(biome, OverworldClimate.getFromType(type), (double) entry.weight / 10);
+					}
+				}
+			}
+		}
 	}
 }

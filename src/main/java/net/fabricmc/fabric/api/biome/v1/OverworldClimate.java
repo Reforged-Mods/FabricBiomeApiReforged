@@ -16,6 +16,8 @@
 
 package net.fabricmc.fabric.api.biome.v1;
 
+import net.minecraftforge.common.BiomeManager;
+
 /**
  * Represents the climates of biomes on the overworld continents.
  *
@@ -41,5 +43,14 @@ public enum OverworldClimate {
 	/**
 	 * Includes Desert (with a weight of 3), Savanna (with a weight of 2), and Plains (with a weight of 1).
 	 */
-	DRY
+	DRY;
+
+	public static OverworldClimate getFromType(BiomeManager.BiomeType type){
+		switch (type){
+			case ICY: return SNOWY;
+			case COOL: return COOL;
+			case WARM: return TEMPERATE;
+			default: return DRY;
+		}
+	}
 }

@@ -30,7 +30,7 @@ import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
  */
 public final class WeightedBiomePicker {
 	private double currentTotal;
-	private final List<WeightedBiomeEntry> entries;
+	final List<WeightedBiomeEntry> entries;
 
 	WeightedBiomePicker() {
 		currentTotal = 0;
