@@ -103,7 +103,6 @@ public class MixinAddHillsLayer {
 		}
 
 		// Cancel vanilla logic.
-		//not sure what this was for, commenting it out till I figure out if it is actually necessary
-		//info.setReturnValue(biomeId);
+		info.setReturnValue(biomeId);
 	}
 }
