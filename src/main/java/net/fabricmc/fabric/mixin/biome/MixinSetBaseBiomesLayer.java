@@ -76,7 +76,11 @@ public class MixinSetBaseBiomesLayer {
 			climate = null;
 		}
 
-		info.setReturnValue(InternalBiomeUtils.transformBiome(random, biome, climate));
+		int returnValue = info.getReturnValue();
+		int transform = InternalBiomeUtils.transformBiome(random, biome, climate);
+		if (transform != returnValue){
+			info.setReturnValue(transform);
+		}
 	}
 
 	@Inject(at = @At("RETURN"), method = "getBiome", cancellable = true)

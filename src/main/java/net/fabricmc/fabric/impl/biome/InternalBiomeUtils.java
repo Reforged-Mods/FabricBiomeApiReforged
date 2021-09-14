@@ -189,21 +189,21 @@ public final class InternalBiomeUtils {
 	}
 
 	public static void addForgeAddedBiomesToList(){
-		//commenting out till I figure out the best way to support other forge biome mods
-		/*for (BiomeManager.BiomeType type : BiomeManager.BiomeType.values()){
+		for (BiomeManager.BiomeType type : BiomeManager.BiomeType.values()){
 			WeightedBiomePicker picker = InternalBiomeData.getOverworldModdedContinentalBiomePickers().get(OverworldClimate.getFromType(type));
+			boolean nullPicker = false;
 			if (picker == null || picker.getCurrentWeightTotal() <= 0.0) {
-				continue;
+				nullPicker = true;
 			}
 			List<BiomeManager.BiomeEntry> list = BiomeManager.getBiomes(type);
 			if (type != BiomeManager.BiomeType.DESERT_LEGACY){
 				for (BiomeManager.BiomeEntry entry : list){
 					RegistryKey<Biome> biome = entry.getKey();
-					if (biome.getValue() != null && !biome.getValue().getNamespace().equals("minecraft") && picker.entries.stream().noneMatch(w -> w.getBiome() == biome)){
+					if (biome.getValue() != null && !biome.getValue().getNamespace().equals("minecraft") && (nullPicker || picker.entries.stream().noneMatch(w -> w.getBiome() == biome))){
 						OverworldBiomes.addContinentalBiome(biome, OverworldClimate.getFromType(type), (double) entry.weight / 5);
 					}
 				}
 			}
-		}*/
+		}
 	}
 }
