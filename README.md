@@ -5,8 +5,9 @@ Fabric Biome Api Reforged is a port of Fabric biomes api to forge. As for why I 
 You can find the Original project <a href=https://github.com/FabricMC/fabric/tree/1.17/fabric-biome-api-v1>Here</a>.
 
 #### Where to download:
-[Curseforge](https://www.curseforge.com/minecraft/mc-mods/fabrics-biome-api-reforged) 
-[Modrinth](https://modrinth.com/mod/fb-api-reforged/)
+
+[Curseforge](https://www.curseforge.com/minecraft/mc-mods/fabrics-biome-api-reforged)  
+[Modrinth](https://modrinth.com/mod/fb-api-reforged/)  
 Also in github releases. 
 
 ### Usage
