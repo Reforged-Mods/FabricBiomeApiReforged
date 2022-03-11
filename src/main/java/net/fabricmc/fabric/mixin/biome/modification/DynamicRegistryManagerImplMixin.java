@@ -25,8 +25,6 @@ import org.spongepowered.asm.mixin.Unique;
 import net.minecraft.util.registry.DynamicRegistryManager;
 import net.minecraft.world.biome.Biome;
 
-import net.fabricmc.fabric.impl.biome.modification.BiomeModificationTracker;
-
 /**
  * This Mixin allows us to track which biomes already ran through {@link net.fabricmc.fabric.impl.biome.modification.BiomeModificationImpl}
  * on a per-DynamicRegistryManager basis.

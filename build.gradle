@@ -1,15 +1,18 @@
 import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 
 plugins {
-    id 'dev.architectury.loom' version '0.7.2-SNAPSHOT'
+    id 'dev.architectury.loom' version '0.11.0-SNAPSHOT'
     id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 loom {
-    mixinConfigs = ["fabric-biome-api.mixins.json"]
+    forge{
+        mixinConfigs = ["fabric-biome-api.mixins.json"]
+    }
+
 }
 
 dependencies {
