@@ -1,6 +1,6 @@
 modLoader="javafml"
 license="Apache-2.0"
-loaderVersion="[31,)"
+loaderVersion="[40,)"
 issueTrackerURL="https://github.com/Trinsdar/FabricBiomeApiReforged/issues"
 
 [[mods]]
@@ -14,12 +14,12 @@ description='''Fabric's Biome api ported to forge. I did this cause the forge ap
 [[dependencies.fabric-biome-api]]
     modId="forge"
     mandatory=true
-    versionRange="[36.1.0,)"
+    versionRange="[40.0.0,)"
     ordering="AFTER"
     side="BOTH"
 [[dependencies.fabric-biome-api]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.5,)"
+    versionRange="[1.18.2,)"
     ordering="AFTER"
     side="BOTH"

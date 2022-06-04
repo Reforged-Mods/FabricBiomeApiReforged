@@ -16,30 +16,27 @@
 
 package net.fabricmc.fabric.api.biome.v1;
 
+import com.google.common.collect.ImmutableSet;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnGroup;
+import net.minecraft.tag.TagKey;
+import net.minecraft.util.registry.BuiltinRegistries;
+import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.SpawnSettings;
+import net.minecraft.world.dimension.DimensionOptions;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import com.google.common.collect.ImmutableSet;
-
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeKeys;
-import net.minecraft.world.biome.SpawnSettings;
-
-import net.fabricmc.fabric.mixin.biome.VanillaLayeredBiomeSourceAccessor;
-
 /**
  * Provides several convenient biome selectors that can be used with {@link BiomeModifications}.
  *
  * <p><b>Experimental feature</b>, may be removed or changed without further notice.
  */
-@Deprecated
 public final class BiomeSelectors {
 	private BiomeSelectors() {
 	}
@@ -71,19 +68,10 @@ public final class BiomeSelectors {
 
 	/**
 	 * Returns a biome selector that will match all biomes that would normally spawn in the Overworld,
-	 * assuming Vanilla's layered biome source is used.
-	 *
-	 * <p>This selector will also match modded biomes that have been added to the overworld using {@link OverworldBiomes}.
+	 * assuming Vanilla's default biome source is used.
 	 */
 	public static Predicate<BiomeSelectionContext> foundInOverworld() {
-		return context -> {
-			RegistryKey<Biome> biomeKey = context.getBiomeKey();
-			// BUG: Minecraft is missing BAMBOO_JUNGLE_HILLS/BAMBOO_JUNGLE in the VanillaLayeredBiome's source BIOME list, even
-			// though they generate in the overworld.
-			return biomeKey == BiomeKeys.BAMBOO_JUNGLE_HILLS
-					|| biomeKey == BiomeKeys.BAMBOO_JUNGLE
-					|| VanillaLayeredBiomeSourceAccessor.getBIOMES().contains(biomeKey);
-		};
+		return context -> context.canGenerateIn(DimensionOptions.OVERWORLD);
 	}
 
 	/**
@@ -93,7 +81,7 @@ public final class BiomeSelectors {
 	 * <p>This selector will also match modded biomes that have been added to the nether using {@link NetherBiomes}.
 	 */
 	public static Predicate<BiomeSelectionContext> foundInTheNether() {
-		return context -> NetherBiomes.canGenerateInNether(context.getBiomeKey());
+		return context -> context.canGenerateIn(DimensionOptions.NETHER);
 	}
 
 	/**
@@ -101,7 +89,16 @@ public final class BiomeSelectors {
 	 * assuming Vanilla's default End biome source is used.
 	 */
 	public static Predicate<BiomeSelectionContext> foundInTheEnd() {
-		return context -> context.getBiome().getCategory() == Biome.Category.THEEND;
+		return context -> context.canGenerateIn(DimensionOptions.END);
+	}
+
+	/**
+	 * Returns a biome selector that will match all biomes in the given tag.
+	 *
+	 * @see net.fabricmc.fabric.api.tag.TagFactory#BIOME
+	 */
+	public static Predicate<BiomeSelectionContext> tag(TagKey<Biome> tag) {
+		return context -> context.hasTag(tag);
 	}
 
 	/**
@@ -159,7 +156,7 @@ public final class BiomeSelectors {
 			SpawnSettings spawnSettings = context.getBiome().getSpawnSettings();
 
 			for (SpawnGroup spawnGroup : SpawnGroup.values()) {
-				for (SpawnSettings.SpawnEntry spawnEntry : spawnSettings.getSpawnEntry(spawnGroup)) {
+				for (SpawnSettings.SpawnEntry spawnEntry : spawnSettings.getSpawnEntries(spawnGroup).getEntries()) {
 					if (entityTypes.contains(spawnEntry.type)) {
 						return true;
 					}
@@ -179,6 +176,6 @@ public final class BiomeSelectors {
 		Set<Biome.Category> categorySet = EnumSet.noneOf(Biome.Category.class);
 		Collections.addAll(categorySet, categories);
 
-		return context -> categorySet.contains(context.getBiome().getCategory());
+		return context -> categorySet.contains(context.getBiome().category);
 	}
 }
