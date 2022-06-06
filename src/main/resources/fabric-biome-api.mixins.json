@@ -1,22 +1,14 @@
 {
   "required": true,
   "package": "net.fabricmc.fabric.mixin.biome",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "modification.BiomeAccessor",
-    "modification.BiomeEffectsAccessor",
-    "modification.BiomeWeatherAccessor",
-    "modification.BiomeWeatherAccessor",
     "modification.DynamicRegistryManagerImplMixin",
-    "modification.GenerationSettingsAccessor",
-    "modification.RegistryOpsMixin",
-    "modification.SpawnDensityAccessor",
-    "modification.SpawnSettingsAccessor",
-    "MixinTheEndBiomeSource",
-    "MultiNoiseBiomeSourceAccessor"
+    "modification.MinecraftServerMixin",
+    "MixinMultiNoiseBiomeSource",
+    "MixinTheEndBiomeSource"
   ],
   "injectors": {
     "defaultRequire": 1
-  }, 
-  "minVersion": "0.8"
+  }
 }
