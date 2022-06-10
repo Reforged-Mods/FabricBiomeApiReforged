@@ -40,7 +40,7 @@ import net.fabricmc.fabric.impl.biome.NetherBiomeData;
 @Mixin(MultiNoiseBiomeSource.Preset.class)
 public class MixinMultiNoiseBiomeSource {
 	// NOTE: This is a lambda-function in the NETHER preset field initializer
-	@Inject(method = {"method_31088", "lambda$static$0"}, at = @At("RETURN"), cancellable = true)
+	@Inject(method = {"method_31088", "lambda$static$0", "m_204282_"}, at = @At("RETURN"), cancellable = true)
 	private static void appendNetherBiomes(Registry<Biome> registry, CallbackInfoReturnable<MultiNoiseUtil.Entries<RegistryEntry<Biome>>> cri) {
 		MultiNoiseUtil.Entries<RegistryEntry<Biome>> biomes = cri.getReturnValue();
 		List<Pair<MultiNoiseUtil.NoiseHypercube, RegistryEntry<Biome>>> entries = new ArrayList<>(biomes.getEntries());
