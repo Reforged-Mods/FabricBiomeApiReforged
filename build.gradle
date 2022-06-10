@@ -2,7 +2,7 @@ import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 
 plugins {
-    id 'dev.architectury.loom' version '0.11.0-SNAPSHOT'
+    id 'dev.architectury.loom' version '0.12.0-SNAPSHOT'
     id 'maven-publish'
 }
 
