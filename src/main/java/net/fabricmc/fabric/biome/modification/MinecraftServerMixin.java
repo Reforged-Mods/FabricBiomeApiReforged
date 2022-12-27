@@ -1,4 +1,4 @@
-package net.fabricmc.fabric.mixin.biome.modification;
+package net.fabricmc.fabric.biome.modification;
 
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.MinecraftServer;
