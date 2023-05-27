@@ -1,4 +1,4 @@
-package net.fabricmc.fabric.mixin.biome;
+package net.fabricmc.fabric.biome;
 
 import com.google.common.base.Suppliers;
 import net.minecraft.core.Holder;

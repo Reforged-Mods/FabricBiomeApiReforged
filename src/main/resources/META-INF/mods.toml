@@ -1,6 +1,6 @@
 modLoader="javafml"
 license="Apache-2.0"
-loaderVersion="[40,)"
+loaderVersion="[43,)"
 issueTrackerURL="https://github.com/Trinsdar/FabricBiomeApiReforged/issues"
 
 [[mods]]
@@ -9,17 +9,17 @@ version="${version}"
 displayName="Fabric BiomeApi Reforged"
 displayURL="https://github.com/Trinsdar/FabricBiomeApiReforged"
 credits="Fabric team for creating fabric and this api, all other contributers who contributed to the original over the years."
-authors="Trinsdar"
+authors="Trinsdar, YeoXuHang"
 description='''Fabric's Biome api ported to forge. I did this cause the forge api just isn't powerful enough for what I need.'''
 [[dependencies.fabric_biome_api]]
     modId="forge"
     mandatory=true
-    versionRange="[40.0.0,)"
+    versionRange="[43.0.0,)"
     ordering="AFTER"
     side="BOTH"
 [[dependencies.fabric_biome_api]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18.2,)"
+    versionRange="[1.19.2,)"
     ordering="AFTER"
     side="BOTH"

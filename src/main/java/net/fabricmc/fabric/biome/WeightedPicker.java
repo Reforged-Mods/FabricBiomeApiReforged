@@ -1,32 +1,13 @@
-/*
- * Copyright (c) 2016, 2017, 2018, 2019 FabricMC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package net.fabricmc.fabric.biome;
 
-package net.fabricmc.fabric.impl.biome;
+import com.google.common.base.Preconditions;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import com.google.common.base.Preconditions;
-
-import net.minecraft.util.math.noise.PerlinNoiseSampler;
-
-/**
- * Picks entries with arbitrary double weights using a binary search.
- */
 public final class WeightedPicker<T> {
     private double currentTotal;
     private final List<WeightedEntry<T>> entries;
@@ -50,8 +31,12 @@ public final class WeightedPicker<T> {
         return currentTotal;
     }
 
-    public T pickFromNoise(PerlinNoiseSampler sampler, double x, double y, double z) {
-        double target = Math.abs(sampler.sample(x, y, z)) * getCurrentWeightTotal();
+    int getEntryCount() {
+        return entries.size();
+    }
+
+    public T pickFromNoise(ImprovedNoise sampler, double x, double y, double z) {
+        double target = Mth.clamp(Math.abs(sampler.noise(x, y, z)), 0, 1) * getCurrentWeightTotal();
 
         return search(target).entry();
     }
