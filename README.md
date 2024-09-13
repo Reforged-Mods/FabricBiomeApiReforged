@@ -2,7 +2,7 @@
 
 Fabric Biome Api Reforged is a port of Fabric biomes api to forge. As for why I did this, instead of using forge's api? Well because Forge's biome api sucks! Especially if you want to do anything more then add a biome to the world, like make a varient of an existing biome or make a biome only spawn as a continent or river or island, ect. 
 
-You can find the Original project <a href=https://github.com/FabricMC/fabric/tree/1.19.2/fabric-biome-api-v1>Here</a>.
+You can find the Original project <a href=https://github.com/FabricMC/fabric/tree/1.17/fabric-biome-api-v1>Here</a>.
 
 #### Where to download:
 

@@ -9,7 +9,7 @@ version="${version}"
 displayName="Fabric BiomeApi Reforged"
 displayURL="https://github.com/Trinsdar/FabricBiomeApiReforged"
 credits="Fabric team for creating fabric and this api, all other contributers who contributed to the original over the years."
-authors="Trinsdar, YeoXuHang"
+authors="Trinsdar"
 description='''Fabric's Biome api ported to forge. I did this cause the forge api just isn't powerful enough for what I need.'''
 [[dependencies.fabric_biome_api]]
     modId="forge"
