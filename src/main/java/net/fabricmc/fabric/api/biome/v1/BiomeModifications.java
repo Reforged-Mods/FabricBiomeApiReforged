@@ -28,8 +28,6 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.carver.ConfiguredCarver;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.gen.feature.PlacedFeature;
 
 /**
@@ -40,8 +38,10 @@ import net.minecraft.world.gen.feature.PlacedFeature;
  *
  * <p><b>Experimental feature</b>, may be removed or changed without further notice.
  */
-@Deprecated
 public final class BiomeModifications {
+	private BiomeModifications() {
+	}
+
 	/**
 	 * Convenience method to add a feature to one or more biomes.
 	 *
@@ -77,7 +77,7 @@ public final class BiomeModifications {
 		Preconditions.checkArgument(entityType.getSpawnGroup() != SpawnGroup.MISC,
 				"Cannot add spawns for entities with spawnGroup=MISC since they'd be replaced by pigs.");
 
-		// We need the entity type to be registered or we cannot deduce an ID otherwisea
+		// We need the entity type to be registered, or we cannot deduce an ID otherwise
 		Identifier id = Registry.ENTITY_TYPE.getId(entityType);
 		Preconditions.checkState(id != Registry.ENTITY_TYPE.getDefaultId(), "Unregistered entity type: %s", entityType);
 
@@ -87,7 +87,7 @@ public final class BiomeModifications {
 	}
 
 	/**
-	 * Create a new biome modification which will be applied whenever biomes are loaded from datapacks.
+	 * Create a new biome modification which will be applied whenever biomes are loaded from data packs.
 	 *
 	 * @param id An identifier for the new set of biome modifications that is returned. Is used for
 	 *           guaranteeing consistent ordering between the biome modifications added by different mods

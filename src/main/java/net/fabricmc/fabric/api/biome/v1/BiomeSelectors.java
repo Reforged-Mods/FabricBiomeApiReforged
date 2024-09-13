@@ -49,7 +49,7 @@ public final class BiomeSelectors {
 	}
 
 	/**
-	 * Matches Biomes that have not been originally defined in a datapack, but that are defined in code.
+	 * Matches Biomes that have not been originally defined in a data pack, but that are defined in code.
 	 */
 	public static Predicate<BiomeSelectionContext> builtIn() {
 		return context -> BuiltinRegistries.BIOME.containsId(context.getBiomeKey().getValue());
@@ -95,7 +95,7 @@ public final class BiomeSelectors {
 	/**
 	 * Returns a biome selector that will match all biomes in the given tag.
 	 *
-	 * @see net.fabricmc.fabric.api.tag.TagFactory#BIOME
+	 * @see net.minecraft.tag.BiomeTags
 	 */
 	public static Predicate<BiomeSelectionContext> tag(TagKey<Biome> tag) {
 		return context -> context.hasTag(tag);
@@ -110,7 +110,7 @@ public final class BiomeSelectors {
 	}
 
 	/**
-	 * Returns a selector that will reject any biome whos keys is in the given collection of keys.
+	 * Returns a selector that will reject any biome whose key is in the given collection of keys.
 	 *
 	 * <p>This is useful for allowing a list of biomes to be defined in the config file, where
 	 * a certain feature should not spawn.
@@ -128,7 +128,7 @@ public final class BiomeSelectors {
 	}
 
 	/**
-	 * Returns a selector that will accept only biomes whos keys are in the given collection of keys.
+	 * Returns a selector that will accept only biomes whose keys are in the given collection of keys.
 	 *
 	 * <p>This is useful for allowing a list of biomes to be defined in the config file, where
 	 * a certain feature should spawn exclusively.
@@ -165,17 +165,5 @@ public final class BiomeSelectors {
 
 			return false;
 		};
-	}
-
-	/**
-	 * Matches Biomes that have one of the given categories.
-	 *
-	 * @see Biome#getCategory()
-	 */
-	public static Predicate<BiomeSelectionContext> categories(Biome.Category... categories) {
-		Set<Biome.Category> categorySet = EnumSet.noneOf(Biome.Category.class);
-		Collections.addAll(categorySet, categories);
-
-		return context -> categorySet.contains(context.getBiome().category);
 	}
 }
