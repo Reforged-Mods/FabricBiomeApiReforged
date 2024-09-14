@@ -9,8 +9,8 @@ accessible  field   net/minecraft/world/biome/source/MultiNoiseBiomeSource biome
 mutable     field   net/minecraft/world/biome/source/MultiNoiseBiomeSource biomeEntries Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$Entries;
 
 # Rebuilding biome source feature lists
-accessible field net/minecraft/world/biome/source/BiomeSource biomes Ljava/util/Set;
-mutable    field net/minecraft/world/biome/source/BiomeSource biomes Ljava/util/Set;
+accessible field net/minecraft/world/biome/source/BiomeSource lazyPossibleBiomes Ljava/util/function/Supplier;
+mutable    field net/minecraft/world/biome/source/BiomeSource lazyPossibleBiomes Ljava/util/function/Supplier;
 
 # Top-Level Biome Fields Access
 accessible field net/minecraft/world/biome/Biome weather Lnet/minecraft/world/biome/Biome$Weather;

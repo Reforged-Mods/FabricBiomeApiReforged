@@ -103,7 +103,7 @@ public final class NetherBiomeData {
                 multiNoiseBiomeSource.biomeEntries = NetherBiomeData.withModdedBiomeEntries(
                         MultiNoiseBiomeSource.Preset.NETHER.biomeSourceFunction.apply(biomeRegistry),
                         biomeRegistry);
-                multiNoiseBiomeSource.biomes = multiNoiseBiomeSource.biomeEntries.getEntries().stream().map(Pair::getSecond).collect(Collectors.toSet());
+                multiNoiseBiomeSource.lazyPossibleBiomes = () -> multiNoiseBiomeSource.biomeEntries.getEntries().stream().map(Pair::getSecond).collect(Collectors.toSet());
                 ((BiomeSourceAccess) multiNoiseBiomeSource).fabric_setModifyBiomeEntries(false);
             }
         }
