@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.fabricmc.fabric.mixin.biome.modification;
+package net.fabricmc.fabric.mixin.biome;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,28 +23,21 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.registry.DynamicRegistryManager;
-import net.minecraft.world.SaveProperties;
-import net.minecraft.world.level.LevelProperties;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.biome.source.util.MultiNoiseUtil;
+import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
+import net.minecraft.world.gen.noise.NoiseConfig;
 
-import net.fabricmc.fabric.impl.biome.modification.BiomeModificationImpl;
+import net.fabricmc.fabric.impl.biome.MultiNoiseSamplerHooks;
 
-@Mixin(MinecraftServer.class)
-public abstract class MinecraftServerMixin {
+@Mixin(NoiseConfig.class)
+public class NoiseConfigMixin {
+	@Shadow
 	@Final
-	@Shadow
-	protected SaveProperties saveProperties;
+	private MultiNoiseUtil.MultiNoiseSampler multiNoiseSampler;
 
-	@Shadow
-	public abstract DynamicRegistryManager.Immutable getRegistryManager();
-
-	@Inject(method = "<init>", at = @At(value = "RETURN"))
-	private void finalizeWorldGen(CallbackInfo ci) {
-		if (!(saveProperties instanceof LevelProperties levelProperties)) {
-			throw new RuntimeException("Incompatible SaveProperties passed to MinecraftServer: " + saveProperties);
-		}
-
-		BiomeModificationImpl.INSTANCE.finalizeWorldGen(getRegistryManager(), levelProperties);
+	@Inject(method = "<init>", at = @At("TAIL"))
+	private void init(ChunkGeneratorSettings chunkGeneratorSettings, Registry<?> noiseRegistry, long seed, CallbackInfo ci) {
+		((MultiNoiseSamplerHooks) (Object) multiNoiseSampler).fabric_setSeed(seed);
 	}
 }

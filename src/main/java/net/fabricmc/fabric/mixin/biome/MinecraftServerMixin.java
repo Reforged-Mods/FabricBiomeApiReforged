@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.fabricmc.fabric.mixin.biome.modification;
+package net.fabricmc.fabric.mixin.biome;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,26 +25,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.registry.DynamicRegistryManager;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.SaveProperties;
-import net.minecraft.world.level.LevelProperties;
 
-import net.fabricmc.fabric.impl.biome.modification.BiomeModificationImpl;
+import net.fabricmc.fabric.impl.biome.NetherBiomeData;
 
-@Mixin(MinecraftServer.class)
-public abstract class MinecraftServerMixin {
-	@Final
+// Priority set just below biome modification mixin's
+@Mixin(value = MinecraftServer.class, priority = 990)
+public class MinecraftServerMixin {
 	@Shadow
+	@Final
 	protected SaveProperties saveProperties;
 
 	@Shadow
-	public abstract DynamicRegistryManager.Immutable getRegistryManager();
+	@Final
+	private DynamicRegistryManager.Immutable registryManager;
 
-	@Inject(method = "<init>", at = @At(value = "RETURN"))
-	private void finalizeWorldGen(CallbackInfo ci) {
-		if (!(saveProperties instanceof LevelProperties levelProperties)) {
-			throw new RuntimeException("Incompatible SaveProperties passed to MinecraftServer: " + saveProperties);
-		}
-
-		BiomeModificationImpl.INSTANCE.finalizeWorldGen(getRegistryManager(), levelProperties);
+	@Inject(method = "<init>", at = @At("RETURN"))
+	private void addNetherBiomes(CallbackInfo ci) {
+		this.saveProperties.getGeneratorOptions().getDimensions().stream().forEach(dimensionOptions -> NetherBiomeData.modifyBiomeSource(this.registryManager.get(Registry.BIOME_KEY), dimensionOptions.getChunkGenerator().getBiomeSource()));
 	}
 }

@@ -1,15 +1,19 @@
 {
   "required": true,
   "package": "net.fabricmc.fabric.mixin.biome",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "modification.DynamicRegistryManagerImplMixin",
-    "modification.MinecraftServerMixin",
-    "MixinMultiNoiseBiomeSource",
-    "MixinTheEndBiomeSource"
+    "MinecraftServerMixin",
+    "BiomeSourceMixin",
+    "ChunkNoiseSamplerMixin",
+    "MultiNoiseBiomeSourceMixin",
+    "MultiNoiseUtilMultiNoiseSamplerMixin",
+    "NoiseConfigMixin",
+    "TheEndBiomeSourceMixin",
+    "modification.DynamicRegistryManagerImmutableImplMixin",
+    "modification.MinecraftServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "minVersion": "0.8"
+  }
 }

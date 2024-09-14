@@ -46,8 +46,6 @@ import net.minecraft.world.gen.feature.PlacedFeature;
 import net.minecraft.world.gen.feature.PlacedFeatures;
 import net.minecraft.world.gen.placementmodifier.BiomePlacementModifier;
 import net.minecraft.world.gen.placementmodifier.SquarePlacementModifier;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -84,7 +82,7 @@ public class FabricBiomeTest {
 		FMLJavaModLoadingContext.get().getModEventBus().register(this);
 	}
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public void onRegister(final RegistryEvent.Register<?> event){
 		if (event.getRegistry() == ForgeRegistries.BIOMES){
 			BiomeDictionary.addTypes(TEST_CRIMSON_FOREST, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.HOT, BiomeDictionary.Type.DRY);
@@ -96,7 +94,7 @@ public class FabricBiomeTest {
 			((IForgeRegistry)event.getRegistry()).register(createEndMidlands().setRegistryName(TEST_END_MIDLANDS.getRegistryName()));
 			((IForgeRegistry)event.getRegistry()).register(createEndBarrens().setRegistryName(TEST_END_BARRRENS.getRegistryName()));
 		}
-	}
+	}*/
 
 
 	public void setup(final FMLCommonSetupEvent e) {
@@ -118,7 +116,7 @@ public class FabricBiomeTest {
 			PlacedFeature PLACED_COMMON_DESERT_WELL = new PlacedFeature(featureEntry, List.of(SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of()));
 			Registry.register(BuiltinRegistries.PLACED_FEATURE, new Identifier(MOD_ID, "fab_desert_well"), PLACED_COMMON_DESERT_WELL);
 
-			BiomeModifications.create(new Identifier("fabric:test_mod"))
+			/*BiomeModifications.create(new Identifier("fabric:test_mod"))
 					.add(ModificationPhase.ADDITIONS,
 							BiomeSelectors.foundInOverworld(),
 							modification -> modification.getWeather().setDownfall(100))
@@ -131,7 +129,7 @@ public class FabricBiomeTest {
 							})
 					.add(ModificationPhase.ADDITIONS,
 							BiomeSelectors.tag(TagKey.of(Registry.BIOME_KEY, new Identifier(MOD_ID, "tag_selector_test"))),
-							context -> context.getEffects().setSkyColor(0x770000));
+							context -> context.getEffects().setSkyColor(0x770000));*/
 		});
 	}
 
@@ -156,6 +154,6 @@ public class FabricBiomeTest {
 	private static Biome composeEndSpawnSettings(GenerationSettings.Builder builder) {
 		SpawnSettings.Builder builder2 = new SpawnSettings.Builder();
 		DefaultBiomeFeatures.addEndMobs(builder2);
-		return (new Biome.Builder()).precipitation(Biome.Precipitation.NONE).category(Biome.Category.THEEND).temperature(0.5F).downfall(0.5F).effects((new BiomeEffects.Builder()).waterColor(4159204).waterFogColor(329011).fogColor(10518688).skyColor(0).moodSound(BiomeMoodSound.CAVE).build()).spawnSettings(builder2.build()).generationSettings(builder.build()).build();
+		return (new Biome.Builder()).precipitation(Biome.Precipitation.NONE).temperature(0.5F).downfall(0.5F).effects((new BiomeEffects.Builder()).waterColor(4159204).waterFogColor(329011).fogColor(10518688).skyColor(0).moodSound(BiomeMoodSound.CAVE).build()).spawnSettings(builder2.build()).generationSettings(builder.build()).build();
 	}
 }

@@ -28,7 +28,7 @@ import net.fabricmc.fabric.impl.biome.modification.BiomeModificationMarker;
  * {@link net.fabricmc.fabric.impl.biome.modification.BiomeModificationImpl} on a per-DynamicRegistryManager basis.
  */
 @Mixin(DynamicRegistryManager.ImmutableImpl.class)
-public class DynamicRegistryManagerImplMixin implements BiomeModificationMarker {
+public class DynamicRegistryManagerImmutableImplMixin implements BiomeModificationMarker {
 	@Unique
 	private boolean modified;
 

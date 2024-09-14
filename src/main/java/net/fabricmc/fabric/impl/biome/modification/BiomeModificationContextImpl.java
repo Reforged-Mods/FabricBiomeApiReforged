@@ -30,11 +30,9 @@ import java.util.stream.Collectors;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.util.registry.RegistryEntryList;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.sound.BiomeAdditionsSound;
@@ -44,6 +42,8 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.util.registry.DynamicRegistryManager;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryEntry;
+import net.minecraft.util.registry.RegistryEntryList;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
@@ -52,13 +52,11 @@ import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.carver.ConfiguredCarver;
-import net.minecraft.world.gen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.PlacedFeature;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModificationContext;
 
-@ApiStatus.Internal
 public class BiomeModificationContextImpl implements BiomeModificationContext {
 	private final DynamicRegistryManager registries;
 	private final RegistryKey<Biome> biomeKey;
@@ -76,11 +74,6 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 		this.effects = new EffectsContextImpl();
 		this.generationSettings = new GenerationSettingsContextImpl();
 		this.spawnSettings = new SpawnSettingsContextImpl();
-	}
-
-	@Override
-	public void setCategory(Biome.Category category) {
-		biome.category = category;
 	}
 
 	@Override
@@ -202,7 +195,6 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 	private class GenerationSettingsContextImpl implements GenerationSettingsContext {
 		private final Registry<ConfiguredCarver<?>> carvers = registries.get(Registry.CONFIGURED_CARVER_KEY);
 		private final Registry<PlacedFeature> features = registries.get(Registry.PLACED_FEATURE_KEY);
-		private final Registry<ConfiguredStructureFeature<?, ?>> structures = registries.get(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY);
 		private final GenerationSettings generationSettings = biome.getGenerationSettings();
 
 		private boolean rebuildFlowerFeatures;
@@ -311,7 +303,11 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 		@Override
 		public boolean removeCarver(GenerationStep.Carver step, RegistryKey<ConfiguredCarver<?>> configuredCarverKey) {
 			ConfiguredCarver<?> carver = carvers.getOrThrow(configuredCarverKey);
-			List<RegistryEntry<ConfiguredCarver<?>>> genCarvers = new ArrayList<>(generationSettings.carvers.get(step).stream().toList());
+			RegistryEntryList<ConfiguredCarver<?>> carvers = generationSettings.carvers.get(step);
+
+			if (carvers == null) return false;
+
+			List<RegistryEntry<ConfiguredCarver<?>>> genCarvers = new ArrayList<>(carvers.stream().toList());
 
 			if (genCarvers.removeIf(entry -> entry.value() == carver)) {
 				generationSettings.carvers.put(step, RegistryEntryList.of(genCarvers));
@@ -321,7 +317,9 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 			return false;
 		}
 
-		private <T> RegistryEntryList<T> plus(RegistryEntryList<T> values, RegistryEntry<T> entry) {
+		private <T> RegistryEntryList<T> plus(@Nullable RegistryEntryList<T> values, RegistryEntry<T> entry) {
+			if (values == null) return RegistryEntryList.of(entry);
+
 			List<RegistryEntry<T>> list = new ArrayList<>(values.stream().toList());
 			list.add(entry);
 			return RegistryEntryList.of(list);

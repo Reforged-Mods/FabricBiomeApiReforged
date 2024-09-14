@@ -2,14 +2,17 @@ import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 
 plugins {
-    id 'dev.architectury.loom' version '0.12.0-SNAPSHOT'
+    id 'dev.architectury.loom' version '1.6-SNAPSHOT'
     id 'maven-publish'
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 loom {
-    forge{
+    accessWidenerPath = file("src/main/resources/fabric-biome-api.accesswidener")
+    forge {
+        convertAccessWideners = true
+        extraAccessWideners.add("fabric-biome-api.accesswidener")
         mixinConfigs = ["fabric-biome-api.mixins.json"]
     }
 
@@ -55,7 +58,7 @@ tasks.withType(JavaCompile) {
 // if it is present.
 // If you remove this task, sources will not be generated.
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = "sources"
+    archiveClassifier.set "sources"
     from sourceSets.main.allSource
 }
 
