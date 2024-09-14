@@ -17,6 +17,7 @@
 package net.fabricmc.fabric.mixin.biome;
 
 import java.util.Set;
+import java.util.function.Supplier;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -32,11 +33,11 @@ import net.minecraft.world.biome.source.BiomeSource;
 public class BiomeSourceMixin {
 	// Not marked as @Final because of AW
 	@Shadow
-	public Set<RegistryEntry<Biome>> biomes;
+	public Supplier<Set<RegistryEntry<Biome>>> lazyPossibleBiomes;
 
 	@Inject(method = "getBiomes", at = @At("HEAD"))
 	private void getBiomes(CallbackInfoReturnable<Set<RegistryEntry<Biome>>> ci) {
-		fabric_modifyBiomeSet(biomes);
+		fabric_modifyBiomeSet(lazyPossibleBiomes.get());
 	}
 
 	protected void fabric_modifyBiomeSet(Set<RegistryEntry<Biome>> biomes) {
