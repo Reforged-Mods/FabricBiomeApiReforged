@@ -14,7 +14,7 @@ description='''Fabric's Biome api ported to forge. I did this cause the forge ap
 [[dependencies.fabric_biome_api]]
     modId="forge"
     mandatory=true
-    versionRange="[43.0.0,)"
+    versionRange="[43.2.0,)"
     ordering="AFTER"
     side="BOTH"
 [[dependencies.fabric_biome_api]]

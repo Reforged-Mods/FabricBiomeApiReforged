@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Suppliers;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
@@ -103,7 +104,7 @@ public final class NetherBiomeData {
                 multiNoiseBiomeSource.biomeEntries = NetherBiomeData.withModdedBiomeEntries(
                         MultiNoiseBiomeSource.Preset.NETHER.biomeSourceFunction.apply(biomeRegistry),
                         biomeRegistry);
-                multiNoiseBiomeSource.lazyPossibleBiomes = () -> multiNoiseBiomeSource.biomeEntries.getEntries().stream().map(Pair::getSecond).collect(Collectors.toSet());
+                multiNoiseBiomeSource.lazyPossibleBiomes = Suppliers.memoize(() -> multiNoiseBiomeSource.biomeEntries.getEntries().stream().map(Pair::getSecond).collect(Collectors.toSet()));
                 ((BiomeSourceAccess) multiNoiseBiomeSource).fabric_setModifyBiomeEntries(false);
             }
         }
